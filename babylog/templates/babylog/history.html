@@ -1,0 +1,50 @@
+<head>
+    {% load static %}
+    <link rel="shortcut icon" href="{%  static 'favicon.ico' %}">
+    <link rel="apple-touch-icon" href="{%  static 'favicon.ico' %}">
+</head>
+
+<body>
+<table align="center" border=1 style="text-align:center;">
+    <tr>
+        <td></td>
+        <td>total meals</td>
+        <td>average meals per day</td>
+        <td>average meal</td>
+        <td>total poop</td>
+    <tr>
+        <td>yesterday</td>
+        <td>{{stats_d.total_feeds}}</td>
+        <td>{{stats_d.average_feeds_per_day}}</td>
+        <td>{{stats_d.average_meal}}</td>
+        <td>{{stats_d.total_poop}}</td>
+    </tr>
+    <tr>
+        <td>last week</td>
+        <td>{{stats_w.total_feeds}}</td>
+        <td>{{stats_w.average_feeds_per_day}}</td>
+        <td>{{stats_w.average_meal}}</td>
+        <td>{{stats_w.total_poop}}</td>
+    </tr>
+    <tr>
+        <td>last month</td>
+        <td>{{stats_m.total_feeds}}</td>
+        <td>{{stats_m.average_feeds_per_day}}</td>
+        <td>{{stats_m.average_meal}}</td>
+        <td>{{stats_m.total_poop}}</td>
+    </tr>
+</table>
+</br>
+
+<table align="center" cellpadding="10" style="text-align:center;">
+    {% for event in event_list %}
+    <tr>
+        
+        <td><a href="{% url 'edit' event.id %}">edit</a></td>
+        <td>{{event.dt|date:"Y-m-d, H:i"}}</td>
+        <td>{{event.event_subtype}}</td>
+        <td>{{event.value}}</td>
+    </tr>
+    {% endfor %}
+</table>
+</body>

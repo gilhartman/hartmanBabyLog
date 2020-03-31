@@ -1,0 +1,76 @@
+
+<body>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<div style = "background:{{background}};height:100%;">
+    <form action="action/" method="post" style="text-align:center;font-size: 400%;">
+        {% csrf_token %}
+        <input type="hidden" name="type" value="feed">
+        <div style = "height:25%;">
+            </br>
+        <select id="subtype" name="subtype" style ="font-size: 100%;" onchange="changeAmountOptions()">
+            <option value="bottle">סימילאק</option>
+            <option value="breastfeed">הנקה</option>
+            <option value="moms_milk">חלב אם</option>
+            <option value="fruit">פירות</option>
+            <option value="veg">ירקות</option>
+        </select>
+        </div>
+        <div style = "height:25%;">
+        </br>
+        <select id="amount" name="value" style ="font-size: 100%;">
+            {% for i in amount %}
+            <option value="{{i}}" {% if i == 120 %}selected="selected"{% endif %}>{{i}}</option>
+            {% endfor %}
+        </select>
+        </div>
+        <div style = "height:25%;">
+        </br>
+            <input id="date" name="date" min="2016-02-16" max="2020-01-01" type="datetime-local" style ="font-size: 100%;width:50%;">
+        </br>
+        </div>
+        <div style = "height:25%">
+        </br>
+        <input type="submit" value="SUBMIT" style ="font-size: 100%;" onClick="form.submit()">
+        </div>
+    </form>
+</div>
+
+<script>
+    function changeAmountOptions() {
+        var subtype = document.getElementById("subtype");
+        var i = subtype.selectedIndex;
+        var amount = document.getElementById("amount");
+        removeOptions(amount)
+        if (subtype.options[i].value == "breastfeed"){
+            var a = document.createElement("option");
+            var b = document.createElement("option");
+            var c = document.createElement("option");
+            a.text = "קצרה";
+            a.value = 1
+            amount.options.add(a);
+            b.text = "רגילה";
+            b.value = 2
+            amount.options.add(b);
+            amount.selectedIndex = 1;
+        }else{
+            for (i = 2; i < 50; i++) {
+                var a = document.createElement("option");
+                a.text = i*5;
+                a.value = i*5
+                amount.options.add(a);
+            }
+            amount.selectedIndex = 22;
+        }
+    }
+
+    function removeOptions(selectbox)
+    {
+        var i;
+        for(i = selectbox.options.length - 1 ; i >= 0 ; i--)
+        {
+            selectbox.remove(i);
+        }
+    }
+</script>
+
+</body>

@@ -1,0 +1,19 @@
+
+<body>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'action' baby_name %}" method="post" style="height:100%;background:{{background}};text-align:center;font-size: 400%;">
+    {% csrf_token %}
+    <input type="hidden" name="type" value="poop">
+    <input type="hidden" name="subtype" value="poop">
+    <input type="hidden" name="value" value="1">
+    </br>
+        <input id="date" name="date" min="2012-01-01" max="2013-01-01" type="datetime-local" style ="font-size: 100%;width:50%;">
+    </br>
+    </div>
+    <div style = ";height:25%">
+    </br>
+    <input type="submit" value="SUBMIT" style ="font-size: 100%;" onClick="form.submit()">
+    </div>
+</form>
+</body>

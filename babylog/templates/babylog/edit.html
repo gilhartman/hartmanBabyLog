@@ -1,0 +1,13 @@
+
+<body>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'delete' id %}" method="post" style="height:100%;text-align:center;font-size: 400%;">
+    {% csrf_token %}
+    </div>
+    <div style = ";height:25%">
+    </br>
+    <input type="submit" value="DELETE" style ="font-size: 100%;">
+    </div>
+</form>
+</body>
