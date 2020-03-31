@@ -8,7 +8,7 @@
 		.myButton
 		{
 			vertical-align: middle;
-			-background-color:lightblue;
+			-background-color:DarkCyan;
 			-moz-border-radius:4px;
 			-webkit-border-radius:10px;
 			-border-radius:10px;
@@ -79,7 +79,7 @@
 <body>
 {% load static %}
 <div style="position:fixed;height:100%;width:100%">
-    <div style= "position:fixed;height:50%;width:100%;text-align:center;background:lightblue">
+    <div style= "position:fixed;height:50%;width:100%;text-align:center;background:DarkCyan">
         <div onclick="location.href='/babylog/{{b1_name}}/feed';" class="myButton Bottle">
             <h1 style="position:relative;top:40%;horizontal-align:center;">
                 {{b1_dt|time:"H:i"}}
@@ -109,7 +109,7 @@
         <div style= "height:40%;width:15%;position:absolute;left:5%;top:0%;" onclick="location.href='/babylog/{{b1_name}}/history'" class="myButton Scroll">
         </div>
     </div>
-    <div style= "position:fixed;height:50%;width:100%;top:50%;text-align:center;background:pink">
+    <div style= "position:fixed;height:50%;width:100%;top:50%;text-align:center;background:MediumPurple">
         <div onclick="location.href='/babylog/{{b2_name}}/feed';" class="myButton Bottle">
             <h1 style="position:relative;top:40%;horizontal-align:center">
                 {{b2_dt|time:"H:i"}}

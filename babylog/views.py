@@ -75,17 +75,17 @@ def collect_stats(baby_name,start_date,end_date):
 
 
 def index(request):
-    y = get_latest_event('Yuval','poop')
-    s = get_latest_event('Shay','poop')
-    b1_dt,b1_subtype,b1_value = get_bottle_text('Yuval')
-    b2_dt,b2_subtype,b2_value = get_bottle_text('Shay')
-    b1_v = vitamin_today('Yuval')
-    b2_v = vitamin_today('Shay')
-    b1_m = latest_medicine('Yuval')
-    b2_m = latest_medicine('Shay')
+    y = get_latest_event('Omri','poop')
+    s = get_latest_event('Shaked','poop')
+    b1_dt,b1_subtype,b1_value = get_bottle_text('Omri')
+    b2_dt,b2_subtype,b2_value = get_bottle_text('Shaked')
+    b1_v = vitamin_today('Omri')
+    b2_v = vitamin_today('Shaked')
+    b1_m = latest_medicine('Omri')
+    b2_m = latest_medicine('Shaked')
     return render(request, 'babylog/front_page.html',
-                  {'p1': y, 'p2':s , 'b1_name': 'Yuval', 'b1_dt': b1_dt, 'b1_subtype': b1_subtype,
-                   'b1_value': b1_value, 'b2_name': 'Shay','b2_dt': b2_dt, 'b2_subtype': b2_subtype,
+                  {'p1': y, 'p2':s , 'b1_name': 'Omri', 'b1_dt': b1_dt, 'b1_subtype': b1_subtype,
+                   'b1_value': b1_value, 'b2_name': 'Shaked','b2_dt': b2_dt, 'b2_subtype': b2_subtype,
                    'b2_value': b2_value, 'b1_v': b1_v, 'b2_v': b2_v, 'b1_m': b1_m, 'b2_m': b2_m})
 
 
@@ -93,9 +93,9 @@ def feed(request, baby_name):
     amount =[]
     for i in range(2,50):
         amount.append(i*5)
-    background = 'lightblue'
-    if baby_name == 'Shay':
-        background = 'pink'
+    background = 'DarkCyan'
+    if baby_name == 'Shaked':
+        background = 'MediumPurple'
     return render(request, 'babylog/feed.html', {'baby_name': baby_name, 'amount': amount, 'background': background})
 
 def history(request,baby_name):
@@ -109,15 +109,15 @@ def history(request,baby_name):
 
 
 def poop(request, baby_name):
-    background = 'lightblue'
-    if baby_name == 'Shay':
-        background = 'pink'
+    background = 'DarkCyan'
+    if baby_name == 'Shaked':
+        background = 'MediumPurple'
     return render(request, 'babylog/poop.html', {'baby_name': baby_name, 'background':background})
 
 def medicine(request, baby_name):
-    background = 'lightblue'
-    if baby_name == 'Shay':
-        background = 'pink'
+    background = 'DarkCyan'
+    if baby_name == 'Shaked':
+        background = 'MediumPurple'
     return render(request, 'babylog/medicine.html', {'baby_name': baby_name, 'background':background},)
 
 def edit(request, id):
