@@ -129,7 +129,7 @@ def edit(request, id):
 
 def action(request, baby_name):
     new_entry = Event(baby_name=baby_name, event_type=request.POST['type'],event_subtype=request.POST['subtype'], value=request.POST['value'],
-                      ødt=make_aware(parser.parse(request.POST['date'])))
+                      dt=make_aware(parser.parse(request.POST['date'])))
     new_entry.save()
     return HttpResponseRedirect("/babylog/")
 
