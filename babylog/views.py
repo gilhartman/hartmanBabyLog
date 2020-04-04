@@ -1,7 +1,10 @@
 import datetime
 
+from dateutil import parser
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.utils import timezone
+from django.utils.timezone import make_aware
 
 from babylog.models import Event
 
@@ -13,8 +16,8 @@ def get_latest_event(Baby_Name,Event_Type):
 
 def vitamin_today(baby_name):
     try:
-        today = datetime.datetime.today()
-        midnight_today = datetime.datetime(today.year,today.month,today.day)
+        today = timezone.now()
+        midnight_today = datetime.datetime(today.year,today.month,today.day, tzinfo=today.tzinfo)
         vitamin = Event.objects.filter(baby_name=baby_name).filter(event_subtype='vitamin').filter(dt__gte = midnight_today).order_by('-dt')[0]
         return 'got vitamin'
     except:
@@ -22,7 +25,7 @@ def vitamin_today(baby_name):
 
 def latest_medicine(baby_name):
     try:
-        date_from = datetime.datetime.now() - datetime.timedelta(days=1)
+        date_from = timezone.now() - datetime.timedelta(days=1)
         med = Event.objects.filter(baby_name=baby_name).filter(event_type='medicine').filter(dt__gte = date_from).exclude(event_subtype='vitamin').order_by('-dt')[0]
         return med
     except:
@@ -54,7 +57,7 @@ def get_bottle_text(Baby_Name):
 
 def collect_stats(baby_name,start_date,end_date):
     stats = {'total_feeds':0, 'measurable_feeds':0, 'food_amount':0, 'total_poop':0,'average_meal':0,'average_feeds_per_day':0}
-    last_feed_time = datetime.datetime.now()+datetime.timedelta(hours=5)
+    last_feed_time = timezone.now()+datetime.timedelta(hours=5)
     for event in Event.objects.filter(baby_name=baby_name).filter(dt__gte = start_date).filter(dt__lte = end_date).order_by('-dt'):
         if event.event_type == 'feed':
             if not event.event_subtype == 'breastfeed':
@@ -98,9 +101,10 @@ def feed(request, baby_name):
         background = 'MediumPurple'
     return render(request, 'babylog/feed.html', {'baby_name': baby_name, 'amount': amount, 'background': background})
 
+
 def history(request,baby_name):
-    today = datetime.datetime.today()
-    midnight_today = datetime.datetime(today.year,today.month,today.day)
+    today = timezone.now()
+    midnight_today = datetime.datetime(today.year,today.month,today.day, tzinfo=today.tzinfo)
     stats_d =  collect_stats(baby_name,midnight_today-datetime.timedelta(days=1),midnight_today)
     stats_w =  collect_stats(baby_name,midnight_today-datetime.timedelta(days=7),midnight_today)
     stats_m =  collect_stats(baby_name,midnight_today-datetime.timedelta(days=30),midnight_today)
@@ -124,7 +128,8 @@ def edit(request, id):
     return render(request, 'babylog/edit.html', {'id': id,},)
 
 def action(request, baby_name):
-    new_entry = Event(baby_name=baby_name, event_type=request.POST['type'],event_subtype=request.POST['subtype'], value=request.POST['value'],dt=request.POST['date'])
+    new_entry = Event(baby_name=baby_name, event_type=request.POST['type'],event_subtype=request.POST['subtype'], value=request.POST['value'],
+                      ødt=make_aware(parser.parse(request.POST['date'])))
     new_entry.save()
     return HttpResponseRedirect("/babylog/")
 
