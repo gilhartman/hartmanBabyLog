@@ -62,8 +62,8 @@ def collect_stats(baby_name,start_date,end_date):
         if event.event_type == 'feed':
             if not event.event_subtype == 'breastfeed':
                 stats['food_amount'] += event.value
-            if event.dt.replace(tzinfo=None) < last_feed_time-datetime.timedelta(hours=1): #combine feeds within one hour
-                last_feed_time = event.dt.replace(tzinfo=None)
+            if event.dt < last_feed_time-datetime.timedelta(hours=1): #combine feeds within one hour
+                last_feed_time = event.dt
                 stats['total_feeds'] += 1
                 if not event.event_subtype == 'breastfeed':
                     stats['measurable_feeds'] += 1
