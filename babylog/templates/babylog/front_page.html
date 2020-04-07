@@ -40,6 +40,14 @@
 			text-align:center;
 			background-size:contain;
 		}
+		.myButton.PoopDone{
+			{% load static %}
+			background-image:url("{% static "poop_colors.png" %}");
+			background-position:center;
+			background-repeat: no-repeat;
+			text-align:center;
+			background-size:contain;
+		}
 		.myButton.Scroll{
 			{% load static %}
 			background-image:url("{% static "scroll.png" %}");
@@ -89,7 +97,7 @@
                 {{b1_value}}
             <h1>
         </div>
-        <div style= "height:40%;width:15%;position:absolute;right:5%;top:50%;" onclick="location.href='/babylog/{{b1_name}}/poop'" class="myButton Poop">
+        <div style= "height:40%;width:15%;position:absolute;right:5%;top:50%;" onclick="location.href='/babylog/{{b1_name}}/poop'" class="myButton {{poop1_type}}">
             <div style= "position:absolute;bottom:0%">
             {{ p1.dt|timesince}}
             </div>
@@ -119,7 +127,7 @@
                 {{b2_value}}
             <h1>
         </div>
-        <div style= "height:40%;width:15%;position:absolute;right:5%;top:50%;" onclick="location.href='/babylog/{{b2_name}}/poop'" class="myButton Poop">
+        <div style= "height:40%;width:15%;position:absolute;right:5%;top:50%;" onclick="location.href='/babylog/{{b2_name}}/poop'" class="myButton {{poop2_type}}">
             <div style= "position:absolute;bottom:0%">
                 {{ p2.dt|timesince}}
             </div>
