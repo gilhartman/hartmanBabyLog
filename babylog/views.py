@@ -17,9 +17,9 @@ def get_latest_event(baby_name, event_type):
 
 def get_poop_type(poop_event):
     if not poop_event:
-        return 'Poop'
+        return 'PoopBW'
     time_from_poop = poop_event.dt + datetime.timedelta(hours=6)
-    return 'Poop' if time_from_poop < timezone.now() else 'PoopDone'
+    return 'PoopBW' if time_from_poop < timezone.now() else 'PoopColor'
 
 
 def vitamin_today(baby_name):
@@ -88,8 +88,8 @@ def collect_stats(baby_name,start_date,end_date):
 
 
 def index(request):
-    poop1_event = get_latest_event('Omri','poop')
-    poop2_event = get_latest_event('Shaked','poop')
+    poop1_event = get_latest_event('Omri', 'poop')
+    poop2_event = get_latest_event('Shaked', 'poop')
     poop1_type = get_poop_type(poop1_event)
     poop2_type = get_poop_type(poop2_event)
     b1_dt,b1_subtype,b1_value = get_bottle_text('Omri')
