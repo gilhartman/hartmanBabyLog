@@ -93,6 +93,8 @@ def collect_stats(baby_name, start_date, end_date):
 class BabyConsts(object):
     b1_name = 'Omri'
     b2_name = 'Shaked'
+    b1_name_hebrew = 'עומרי'
+    b2_name_hebrew = 'שקד'
     b1_background_color = 'DarkCyan'
     b2_background_color = 'MediumPurple'
 
@@ -100,6 +102,8 @@ class BabyConsts(object):
 def index(request):
     b1_name = BabyConsts.b1_name
     b2_name = BabyConsts.b2_name
+    b1_name_hebrew = BabyConsts.b1_name_hebrew
+    b2_name_hebrew = BabyConsts.b2_name_hebrew
     b1_background_color = BabyConsts.b1_background_color
     b2_background_color = BabyConsts.b2_background_color
     p1 = get_latest_event(b1_name, 'poop')

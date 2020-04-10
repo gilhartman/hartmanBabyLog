@@ -10,7 +10,7 @@
             display:inline-block;
             cursor:pointer;
             color:black;
-            font-size:20px;
+            font-size:40px;
             width:400px;
             height:80%;
             text-decoration:none;
@@ -18,10 +18,17 @@
             text-align:center;
             background-position:center;
             background-repeat: no-repeat;
+            position: relative;
         }
         .myButton.Bottle{
             {% load static %}
             background-image:url("{% static "bottle.png" %}");
+        }
+        .myButton.NameContainer{
+            font-size:70px;
+            display: flex;
+            align-items: center;
+            justify-content: center
         }
         .myButton.PoopBW{
             {% load static %}
@@ -69,13 +76,16 @@
 <div style="position:fixed;height:100%;width:100%">
     <div style= "position:fixed;height:50%;width:100%;text-align:center;background:{{b1_background_color}}">
         <div onclick="location.href='/babylog/{{b1_name}}/feed';" class="myButton Bottle">
-            <h1 style="position:relative;top:40%;horizontal-align:center;">
+            <h2 style="position:relative;top:40%;horizontal-align:center;">
                 {{b1_dt|time:"H:i"}}
                 <br>
                 {{b1_subtype}}
                 <br>
                 {{b1_value}}
-            <h1>
+            </h2>
+        </div>
+        <div style= "height:40%;width:15%;position:absolute;right:5%;top:0%;" class="myButton NameContainer">
+                <p>{{b1_name_hebrew}}</p>
         </div>
         <div style= "height:40%;width:15%;position:absolute;right:5%;top:50%;" onclick="location.href='/babylog/{{b1_name}}/poop'" class="myButton {{poop1_type}}">
             <div style= "position:absolute;bottom:0%">
@@ -100,13 +110,16 @@
     </div>
     <div style= "position:fixed;height:50%;width:100%;top:50%;text-align:center;background:{{b2_background_color}}">
         <div onclick="location.href='/babylog/{{b2_name}}/feed';" class="myButton Bottle">
-            <h1 style="position:relative;top:40%;horizontal-align:center">
+            <h2 style="position:relative;top:40%;horizontal-align:center">
                 {{b2_dt|time:"H:i"}}
                 <br>
                 {{b2_subtype}}
                 <br>
                 {{b2_value}}
-            <h1>
+            </h2>
+        </div>
+        <div style= "height:40%;width:15%;position:absolute;right:5%;top:0%;" class="myButton NameContainer">
+                <p>{{b2_name_hebrew}}</p>
         </div>
         <div style= "height:40%;width:15%;position:absolute;right:5%;top:50%;" onclick="location.href='/babylog/{{b2_name}}/poop'" class="myButton {{poop2_type}}">
             <div style= "position:absolute;bottom:0%">
