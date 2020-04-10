@@ -7,3 +7,4 @@ class Event(models.Model):
     event_subtype = models.CharField(max_length=200)
     value = models.IntegerField(default=0)
     dt = models.DateTimeField('date of occurrence')
+    objects = models.Manager()

@@ -9,23 +9,23 @@
             </br>
         <select id="subtype" name="subtype" style ="font-size: 100%;" onchange="changeAmountOptions()">
             <option value="bottle">סימילאק</option>
-            <option value="breastfeed">הנקה</option>
             <option value="moms_milk">חלב אם</option>
-            <option value="fruit">פירות</option>
-            <option value="veg">ירקות</option>
+            <option value="breastfeed">הנקה</option>
+<!--            <option value="fruit">פירות</option>-->
+<!--            <option value="veg">ירקות</option>-->
         </select>
         </div>
         <div style = "height:25%;">
         </br>
         <select id="amount" name="value" style ="font-size: 100%;">
             {% for i in amount %}
-            <option value="{{i}}" {% if i == 80 %}selected="selected"{% endif %}>{{i}}</option>
+            <option value="{{i}}" {% if i == default_feed_amount %}selected="selected"{% endif %}>{{i}}</option>
             {% endfor %}
         </select>
         </div>
         <div style = "height:25%;">
         </br>
-            <input id="date" name="date" type="datetime-local" style ="font-size: 100%;width:50%;">
+            <input id="date" name="date" type="datetime-local" style ="font-size: 80%;width:50%;">
         </br>
         </div>
         <div style = "height:25%">
@@ -53,13 +53,17 @@
             amount.options.add(b);
             amount.selectedIndex = 1;
         }else{
-            for (i = 2; i < 50; i++) {
+            let selectedIndex = 0;
+            for (i = {{min_feed_amount}}; i < {{max_feed_amount}}; i+={{feed_jump_amount}}) {
                 var a = document.createElement("option");
-                a.text = i*5;
-                a.value = i*5
+                a.text = i;
+                a.value = i;
                 amount.options.add(a);
+                if (i < {{default_feed_amount}}) {
+                    selectedIndex++;
+                }
             }
-            amount.selectedIndex = 22;
+            amount.selectedIndex = selectedIndex;
         }
     }
 

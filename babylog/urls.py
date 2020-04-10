@@ -9,6 +9,6 @@ urlpatterns = [
     path('<baby_name>/action/', views.action, name='action'),
     path('<baby_name>/history/', views.history, name='history'),
     path('<baby_name>/medicine/', views.medicine, name='medicine'),
-    path('<id>/edit/', views.edit, name='edit'),
-    path('<id>/delete/', views.delete, name='delete'),
+    path('<db_id>/edit/', views.edit, name='edit'),
+    path('<db_id>/delete/', views.delete, name='delete'),
 ]

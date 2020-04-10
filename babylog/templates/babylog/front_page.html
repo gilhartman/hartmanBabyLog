@@ -3,91 +3,71 @@
     <link rel="shortcut icon" href="{%  static 'favicon.ico' %}">
     <link rel="apple-touch-icon" href="{%  static 'apple-touch-icon.png' %}">
     <title>קטנטנים</title>
+    <style>
+        .myButton
+        {
+            vertical-align: middle;
+            display:inline-block;
+            cursor:pointer;
+            color:black;
+            font-size:20px;
+            width:400px;
+            height:80%;
+            text-decoration:none;
+            background-size:contain;
+            text-align:center;
+            background-position:center;
+            background-repeat: no-repeat;
+        }
+        .myButton.Bottle{
+            {% load static %}
+            background-image:url("{% static "bottle.png" %}");
+        }
+        .myButton.PoopBW{
+            {% load static %}
+            background-image:url("{% static "poop_bw.png" %}");
+        }
+        .myButton.PoopColor{
+            {% load static %}
+            background-image:url("{% static "poop_colors.png" %}");
+        }
+        .myButton.Scroll{
+            {% load static %}
+            background-image:url("{% static "scroll.png" %}");
+        }
+        .myButton.MedicineColor{
+            {% load static %}
+            background-image:url("{% static "medicine_colors.png" %}");
+        }
+        .myButton.MedicineBW{
+            {% load static %}
+            background-image:url("{% static "medicine_bw.png" %}");
+        }
+
+        .center {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            text-align: center;
+        }
+
+        .bottom {
+            position: absolute;
+            left: 0;
+            bottom: 0%;
+            width: 100%;
+            text-align: center;
+        }
+
+    </style>
     <meta http-equiv="refresh" content="15">
-	<style>
-		.myButton
-		{
-			vertical-align: middle;
-			-background-color:DarkCyan;
-			-moz-border-radius:4px;
-			-webkit-border-radius:10px;
-			-border-radius:10px;
-			-border:2px solid black;
-			display:inline-block;
-			cursor:pointer;
-			color:black;
-			-font-family:Arial;
-			-font-weight:bold;
-			font-size:20px;
-			width:400px;
-			height:80%;
-			text-decoration:none;
-		}
-		.myButton.Bottle{
-			{% load static %}
-			background-image:url("{% static "bottle.png" %}");
-			background-position:center;
-			-background-size: 400px;
-			background-repeat: no-repeat;
-			text-align:center;
-			background-size:contain;
-		}
-		.myButton.PoopBW{
-			{% load static %}
-			background-image:url("{% static "poop_bw.png" %}");
-			background-position:center;
-			background-repeat: no-repeat;
-			text-align:center;
-			background-size:contain;
-		}
-		.myButton.PoopColor{
-			{% load static %}
-			background-image:url("{% static "poop_colors.png" %}");
-			background-position:center;
-			background-repeat: no-repeat;
-			text-align:center;
-			background-size:contain;
-		}
-		.myButton.Scroll{
-			{% load static %}
-			background-image:url("{% static "scroll.png" %}");
-			background-position:center;
-			background-repeat: no-repeat;
-			text-align:center;
-			background-size:contain;
-		}
-		.myButton.Medicine{
-			{% load static %}
-			background-image:url("{% static "medicine.png" %}");
-			background-position:center;
-			background-repeat: no-repeat;
-			text-align:center;
-			background-size:contain;
-		}
-
-		.center {
-		    position: absolute;
-		    left: 0;
-		    top: 50%;
-		    width: 100%;
-		    text-align: center;
-		}
-
-		.bottom {
-		    position: absolute;
-		    left: 0;
-		    bottom: 0%;
-		    width: 100%;
-		    text-align: center;
-		}
-
-	</style>
 </head>
 
 <body>
 {% load static %}
 <div style="position:fixed;height:100%;width:100%">
-    <div style= "position:fixed;height:50%;width:100%;text-align:center;background:DarkCyan">
+    <div style= "position:fixed;height:50%;width:100%;text-align:center;background:{{b1_background_color}}">
         <div onclick="location.href='/babylog/{{b1_name}}/feed';" class="myButton Bottle">
             <h1 style="position:relative;top:40%;horizontal-align:center;">
                 {{b1_dt|time:"H:i"}}
@@ -102,7 +82,8 @@
             {{ p1.dt|timesince}}
             </div>
         </div>
-        <div style= "height:40%;width:18%;position:absolute;left:3%;top:50%;" onclick="location.href='/babylog/{{b1_name}}/medicine'" class="myButton Medicine">
+        <div style= "height:40%;width:18%;position:absolute;left:3%;top:50%;"
+             onclick="location.href='/babylog/{{b1_name}}/medicine'" class="myButton {{medicine1_type}}">
             <div>
                 <div class="center">
                     {{ b1_m.event_subtype }}
@@ -117,7 +98,7 @@
         <div style= "height:40%;width:15%;position:absolute;left:5%;top:0%;" onclick="location.href='/babylog/{{b1_name}}/history'" class="myButton Scroll">
         </div>
     </div>
-    <div style= "position:fixed;height:50%;width:100%;top:50%;text-align:center;background:MediumPurple">
+    <div style= "position:fixed;height:50%;width:100%;top:50%;text-align:center;background:{{b2_background_color}}">
         <div onclick="location.href='/babylog/{{b2_name}}/feed';" class="myButton Bottle">
             <h1 style="position:relative;top:40%;horizontal-align:center">
                 {{b2_dt|time:"H:i"}}
@@ -132,7 +113,7 @@
                 {{ p2.dt|timesince}}
             </div>
         </div>
-        <div style= "height:40%;width:18%;text-align:center;position:absolute;left:3%;top:50%;" onclick="location.href='/babylog/{{b2_name}}/medicine'" class="myButton Medicine">
+        <div style= "height:40%;width:18%;text-align:center;position:absolute;left:3%;top:50%;" onclick="location.href='/babylog/{{b2_name}}/medicine'" class="myButton {{medicine2_type}}">
             <div>
                 <div class="center">
                         {{ b2_m.event_subtype }}

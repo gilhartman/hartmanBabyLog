@@ -1,4 +1,4 @@
-static/
+/static/
 .idea
 db.sqlite3
 python3

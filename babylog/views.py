@@ -23,22 +23,18 @@ def get_poop_type(poop_event):
 
 
 def vitamin_today(baby_name):
-    try:
-        today = timezone.now()
-        midnight_today = datetime.datetime(today.year,today.month,today.day, tzinfo=today.tzinfo)
-        vitamin = Event.objects.filter(baby_name=baby_name).filter(event_subtype='vitamin').filter(dt__gte = midnight_today).order_by('-dt')[0]
-        return 'got vitamin'
-    except:
-        return 'no vitamin'
+    today = timezone.now()
+    midnight_today = datetime.datetime(today.year, today.month, today.day, tzinfo=today.tzinfo)
+    if Event.objects.filter(baby_name=baby_name).filter(event_subtype='vitamin').filter(dt__gte=midnight_today):
+        return 'got vitamin', 'MedicineColor'
+    else:
+        return 'no vitamin', 'MedicineBW'
 
 
 def latest_medicine(baby_name):
-    try:
-        date_from = timezone.now() - datetime.timedelta(days=1)
-        med = Event.objects.filter(baby_name=baby_name).filter(event_type='medicine').filter(dt__gte = date_from).exclude(event_subtype='vitamin').order_by('-dt')[0]
-        return med
-    except:
-        return ' '
+    date_from = timezone.now() - datetime.timedelta(days=1)
+    med_list = Event.objects.filter(baby_name=baby_name).filter(event_type='medicine').filter(dt__gte=date_from).exclude(event_subtype='vitamin').order_by('-dt')
+    return med_list[0] if med_list else ' '
 
 
 def get_bottle_text(baby_name):
@@ -62,17 +58,24 @@ def get_bottle_text(baby_name):
 
     subtype = subtype[:-3]
     value = value[:-3]
-    subtype = subtype.replace('bottle',u"סימילאק").replace('breastfeed',u"הנקה").replace('moms_milk',u"חלב אם").replace('veg',u"ירקות").replace('fruit',u"פירות")
-    return (dt, subtype, value)
+    subtype = subtype.replace('bottle', u"סימילאק").\
+        replace('breastfeed', u"הנקה").\
+        replace('moms_milk', u"חלב אם").\
+        replace('veg', u"ירקות").\
+        replace('fruit', u"פירות")
+    return dt, subtype, value
 
-def collect_stats(baby_name,start_date,end_date):
-    stats = {'total_feeds':0, 'measurable_feeds':0, 'food_amount':0, 'total_poop':0,'average_meal':0,'average_feeds_per_day':0}
+
+def collect_stats(baby_name, start_date, end_date):
+    stats = {'total_feeds': 0, 'measurable_feeds': 0, 'food_amount': 0, 'total_poop': 0, 'average_meal': 0,
+             'average_feeds_per_day': 0}
     last_feed_time = timezone.now()+datetime.timedelta(hours=5)
-    for event in Event.objects.filter(baby_name=baby_name).filter(dt__gte = start_date).filter(dt__lte = end_date).order_by('-dt'):
+    for event in Event.objects.filter(baby_name=baby_name).filter(dt__gte=start_date).filter(dt__lte=end_date).order_by('-dt'):
         if event.event_type == 'feed':
             if not event.event_subtype == 'breastfeed':
                 stats['food_amount'] += event.value
-            if event.dt < last_feed_time-datetime.timedelta(hours=1): #combine feeds within one hour
+            if event.dt < last_feed_time-datetime.timedelta(hours=1):
+                # combine feeds within one hour
                 last_feed_time = event.dt
                 stats['total_feeds'] += 1
                 if not event.event_subtype == 'breastfeed':
@@ -80,47 +83,56 @@ def collect_stats(baby_name,start_date,end_date):
         elif event.event_subtype == 'poop':
             stats['total_poop'] += 1
     try:
-        stats['average_meal']=stats['food_amount']/stats['measurable_feeds']
-        stats['average_feeds_per_day']="{0:.1f}".format(float(stats['total_feeds'])/(end_date-start_date).days)
-    except:
+        stats['average_meal'] = stats['food_amount']/stats['measurable_feeds']
+        stats['average_feeds_per_day'] = "{0:.1f}".format(float(stats['total_feeds'])/(end_date-start_date).days)
+    except Exception:
         pass
     return stats
 
 
+class BabyConsts(object):
+    b1_name = 'Omri'
+    b2_name = 'Shaked'
+    b1_background_color = 'DarkCyan'
+    b2_background_color = 'MediumPurple'
+
+
 def index(request):
-    poop1_event = get_latest_event('Omri', 'poop')
-    poop2_event = get_latest_event('Shaked', 'poop')
-    poop1_type = get_poop_type(poop1_event)
-    poop2_type = get_poop_type(poop2_event)
-    b1_dt,b1_subtype,b1_value = get_bottle_text('Omri')
-    b2_dt,b2_subtype,b2_value = get_bottle_text('Shaked')
-    b1_v = vitamin_today('Omri')
-    b2_v = vitamin_today('Shaked')
-    b1_m = latest_medicine('Omri')
-    b2_m = latest_medicine('Shaked')
-    return render(request, 'babylog/front_page.html',
-                  {'p1': poop1_event, 'p2':poop2_event , 'b1_name': 'Omri', 'b1_dt': b1_dt, 'b1_subtype': b1_subtype,
-                   'b1_value': b1_value, 'b2_name': 'Shaked','b2_dt': b2_dt, 'b2_subtype': b2_subtype,
-                   'b2_value': b2_value, 'b1_v': b1_v, 'b2_v': b2_v, 'b1_m': b1_m, 'b2_m': b2_m,
-                   'poop1_type': poop1_type,  'poop2_type': poop2_type})
+    b1_name = BabyConsts.b1_name
+    b2_name = BabyConsts.b2_name
+    b1_background_color = BabyConsts.b1_background_color
+    b2_background_color = BabyConsts.b2_background_color
+    p1 = get_latest_event(b1_name, 'poop')
+    p2 = get_latest_event(b2_name, 'poop')
+    poop1_type = get_poop_type(p1)
+    poop2_type = get_poop_type(p2)
+    b1_dt, b1_subtype, b1_value = get_bottle_text(b1_name)
+    b2_dt, b2_subtype, b2_value = get_bottle_text(b2_name)
+    b1_v, medicine1_type = vitamin_today(b1_name)
+    b2_v, medicine2_type = vitamin_today(b2_name)
+    b1_m = latest_medicine(b1_name)
+    b2_m = latest_medicine(b2_name)
+    return render(request, 'babylog/front_page.html', locals())
 
 
 def feed(request, baby_name):
-    amount =[i for i in range(10, 200, 5)]
-    background = 'DarkCyan'
-    if baby_name == 'Shaked':
-        background = 'MediumPurple'
-    return render(request, 'babylog/feed.html', {'baby_name': baby_name, 'amount': amount, 'background': background})
+    min_feed_amount = 10
+    max_feed_amount = 200
+    feed_jump_amount = 5
+    default_feed_amount = 80
+    amount = [i for i in range(min_feed_amount, max_feed_amount, feed_jump_amount)]
+    background = BabyConsts.b1_background_color if baby_name == BabyConsts.b1_name else BabyConsts.b2_background_color
+    return render(request, 'babylog/feed.html', locals())
 
 
-def history(request,baby_name):
+def history(request, baby_name):
     today = timezone.now()
-    midnight_today = datetime.datetime(today.year,today.month,today.day, tzinfo=today.tzinfo)
-    stats_d =  collect_stats(baby_name,midnight_today-datetime.timedelta(days=1),midnight_today)
-    stats_w =  collect_stats(baby_name,midnight_today-datetime.timedelta(days=7),midnight_today)
-    stats_m =  collect_stats(baby_name,midnight_today-datetime.timedelta(days=30),midnight_today)
+    midnight_today = datetime.datetime(today.year, today.month, today.day, tzinfo=today.tzinfo)
+    stats_d = collect_stats(baby_name, midnight_today-datetime.timedelta(days=1), midnight_today)
+    stats_w = collect_stats(baby_name, midnight_today-datetime.timedelta(days=7), midnight_today)
+    stats_m = collect_stats(baby_name, midnight_today-datetime.timedelta(days=30), midnight_today)
     event_list = Event.objects.filter(baby_name=baby_name).order_by('-dt')
-    return render(request, 'babylog/history.html', {'event_list':event_list, 'stats_d':stats_d,'stats_w':stats_w,'stats_m':stats_m})
+    return render(request, 'babylog/history.html', locals())
 
 
 def poop(_, baby_name):
@@ -130,25 +142,28 @@ def poop(_, baby_name):
     return HttpResponseRedirect("/babylog/")
 
 
-def medicine(request, baby_name):
-    background = 'DarkCyan'
-    if baby_name == 'Shaked':
-        background = 'MediumPurple'
-    return render(request, 'babylog/medicine.html', {'baby_name': baby_name, 'background':background},)
+def medicine(_, baby_name):
+    new_entry = Event(baby_name=baby_name, event_type='medicine', event_subtype='vitamin', value='1',
+                      dt=timezone.now())
+    new_entry.save()
+    return HttpResponseRedirect("/babylog/")
+    # TODO To be used when there is more than one vitamin
+    # background = BabyConsts.b1_background_color if baby_name == BabyConsts.b1_name else BabyConsts.b2_background_color
+    # return render(request, 'babylog/medicine.html', locals())
 
 
-def edit(request, id):
-    return render(request, 'babylog/edit.html', {'id': id,},)
+def edit(request, db_id):
+    return render(request, 'babylog/edit.html', locals())
 
 
 def action(request, baby_name):
-    new_entry = Event(baby_name=baby_name, event_type=request.POST['type'],event_subtype=request.POST['subtype'], value=request.POST['value'],
+    new_entry = Event(baby_name=baby_name, event_type=request.POST['type'], event_subtype=request.POST['subtype'], value=request.POST['value'],
                       dt=make_aware(parser.parse(request.POST['date'])))
     new_entry.save()
     return HttpResponseRedirect("/babylog/")
 
 
-def delete(request, id):
-    instance = Event.objects.get(id=id)
+def delete(_, db_id):
+    instance = Event.objects.get(id=db_id)
     instance.delete()
     return HttpResponseRedirect("/babylog/")
