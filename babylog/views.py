@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 from dateutil import parser
 from django.http import HttpResponseRedirect
@@ -90,6 +91,17 @@ def collect_stats(baby_name, start_date, end_date):
     return stats
 
 
+def save_entry(baby_name, event_type, event_subtype, value, dt):
+    same_event = Event.objects.filter(baby_name=baby_name, event_type=event_type, event_subtype=event_subtype, value=value, dt=dt)
+    if not same_event:
+        new_entry = Event(baby_name=baby_name, event_type=event_type, event_subtype=event_subtype, value=value, dt=dt)
+        new_entry.save()
+    else:
+        logging.warning(f"Same event exists in the db. Not adding a duplicate {same_event}")
+
+    return HttpResponseRedirect("/babylog/")
+
+
 class BabyConsts(object):
     b1_name = 'Omri'
     b2_name = 'Shaked'
@@ -140,17 +152,13 @@ def history(request, baby_name):
 
 
 def poop(_, baby_name):
-    new_entry = Event(baby_name=baby_name, event_type='poop', event_subtype='poop', value='1',
+    return save_entry(baby_name=baby_name, event_type='poop', event_subtype='poop', value='1',
                       dt=timezone.now())
-    new_entry.save()
-    return HttpResponseRedirect("/babylog/")
 
 
 def medicine(_, baby_name):
-    new_entry = Event(baby_name=baby_name, event_type='medicine', event_subtype='vitamin', value='1',
+    return save_entry(baby_name=baby_name, event_type='medicine', event_subtype='vitamin', value='1',
                       dt=timezone.now())
-    new_entry.save()
-    return HttpResponseRedirect("/babylog/")
     # TODO To be used when there is more than one vitamin
     # background = BabyConsts.b1_background_color if baby_name == BabyConsts.b1_name else BabyConsts.b2_background_color
     # return render(request, 'babylog/medicine.html', locals())
@@ -161,10 +169,8 @@ def edit(request, db_id):
 
 
 def action(request, baby_name):
-    new_entry = Event(baby_name=baby_name, event_type=request.POST['type'], event_subtype=request.POST['subtype'], value=request.POST['value'],
+    return save_entry(baby_name=baby_name, event_type=request.POST['type'], event_subtype=request.POST['subtype'], value=request.POST['value'],
                       dt=make_aware(parser.parse(request.POST['date'])))
-    new_entry.save()
-    return HttpResponseRedirect("/babylog/")
 
 
 def delete(_, db_id):

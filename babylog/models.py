@@ -8,3 +8,6 @@ class Event(models.Model):
     value = models.IntegerField(default=0)
     dt = models.DateTimeField('date of occurrence')
     objects = models.Manager()
+
+    def __str__(self):
+        return f"Event[{self.baby_name}, {self.event_type}, {self.event_subtype}, {self.value}, {self.dt}]"
