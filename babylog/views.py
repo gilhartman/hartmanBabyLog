@@ -93,13 +93,24 @@ def collect_stats(baby_name, start_date, end_date):
 
 def save_entry(baby_name, event_type, event_subtype, value, dt):
     same_event = Event.objects.filter(baby_name=baby_name, event_type=event_type, event_subtype=event_subtype, value=value, dt=dt)
-    if not same_event:
-        new_entry = Event(baby_name=baby_name, event_type=event_type, event_subtype=event_subtype, value=value, dt=dt)
-        new_entry.save()
-    else:
+    response = HttpResponseRedirect("/babylog/")
+    if same_event:
         logging.warning(f"Same event exists in the db. Not adding a duplicate {same_event}")
+        return response
+    now = timezone.now()
+    tomorrow = now + datetime.timedelta(days=1)
+    hour_from_now = now + datetime.timedelta(hours=1)
+    if dt > tomorrow:
+        logging.warning(f"Event time cannot be in the future: {dt}")
+        return response
+    if dt > hour_from_now:
+        logging.warning(f"Event time is less than a day into the future: {dt}. Moving it back a day")
+        dt -= datetime.timedelta(days=1)
 
-    return HttpResponseRedirect("/babylog/")
+    new_entry = Event(baby_name=baby_name, event_type=event_type, event_subtype=event_subtype, value=value, dt=dt)
+    new_entry.save()
+
+    return response
 
 
 class BabyConsts(object):
@@ -135,7 +146,7 @@ def feed(request, baby_name):
     min_feed_amount = 10
     max_feed_amount = 200
     feed_jump_amount = 5
-    default_feed_amount = 80
+    default_feed_amount = 90
     amount = [i for i in range(min_feed_amount, max_feed_amount, feed_jump_amount)]
     background = BabyConsts.b1_background_color if baby_name == BabyConsts.b1_name else BabyConsts.b2_background_color
     return render(request, 'babylog/feed.html', locals())
