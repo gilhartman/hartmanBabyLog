@@ -83,7 +83,7 @@ def collect_stats(baby_name, start_date, end_date):
         elif event.event_subtype == 'poop':
             stats['total_poop'] += 1
     try:
-        stats['average_meal'] = stats['food_amount']/stats['measurable_feeds']
+        stats['average_meal'] = "{0:.1f}".format(float(stats['food_amount']/stats['measurable_feeds']))
         stats['average_feeds_per_day'] = "{0:.1f}".format(float(stats['total_feeds'])/(end_date-start_date).days)
     except Exception:
         pass
