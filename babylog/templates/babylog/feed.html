@@ -1,5 +1,5 @@
 
-<body>
+<body onload="changeAmountOptions()">
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 <div style = "background:{{background}};height:100%;">
     <form action="action/" method="post" style="text-align:center;font-size: 400%;">
@@ -8,19 +8,19 @@
         <div style = "height:25%;">
             </br>
         <select id="subtype" name="subtype" style ="font-size: 100%;" onchange="changeAmountOptions()">
-            <option value="bottle">סימילאק</option>
-            <option value="moms_milk">חלב אם</option>
             <option value="breastfeed">הנקה</option>
+            <option value="bottle">סימילאק</option>
+<!--            <option value="moms_milk">חלב אם</option>-->
 <!--            <option value="fruit">פירות</option>-->
 <!--            <option value="veg">ירקות</option>-->
         </select>
         </div>
         <div style = "height:25%;">
         </br>
-        <select id="amount" name="value" style ="font-size: 100%;">
-            {% for i in amount %}
-            <option value="{{i}}" {% if i == default_feed_amount %}selected="selected"{% endif %}>{{i}}</option>
-            {% endfor %}
+        <select id="amount" name="value" style ="font-size: 100%;" >
+<!--            {% for i in amount %}-->
+<!--            <option value="{{i}}" {% if i == default_feed_amount %}selected="selected"{% endif %}>{{i}}</option>-->
+<!--            {% endfor %}-->
         </select>
         </div>
         <div style = "height:25%;">
@@ -44,7 +44,6 @@
         if (subtype.options[i].value == "breastfeed"){
             var a = document.createElement("option");
             var b = document.createElement("option");
-            var c = document.createElement("option");
             a.text = "קצרה";
             a.value = 1
             amount.options.add(a);
